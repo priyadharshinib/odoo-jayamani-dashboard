@@ -14,17 +14,16 @@ const ODOO = {
     ? [{ name: 'S1', partner_id: [10, 'Ravi'], company_id: FUEL, amount_total: 1000 }, { name: 'S2', partner_id: [11, 'Anand'], company_id: TYRE, amount_total: 500 }]
     : [{ name: 'S3', partner_id: [10, 'Ravi'], company_id: FUEL, amount_total: 700 }],
   'purchase.order': () => [{ name: 'P1', partner_id: [12, 'IOC'], company_id: FUEL, amount_total: 300 }],
-  'account.move.line': () => [
-    { company_id: FUEL, balance: -1000, account_type: 'income' }, { company_id: FUEL, balance: 600, account_type: 'expense_direct_cost' },
-    { company_id: TYRE, balance: -500, account_type: 'income' }],
-  'account.move': () => [
-    { name: 'INV/1', partner_id: [13, 'Kaveri'], company_id: FUEL, invoice_date_due: '2026-11-01', amount_residual: 2500 },
-    { name: 'INV/2', partner_id: [14, 'Selvam'], company_id: TYRE, invoice_date_due: '2026-11-05', amount_residual: 900 }],
+  'account.move.line': () => [{ name: 'Diesel', quantity: 100, price_unit: 90, price_subtotal: 9000 }],
+  'account.move': (b, method) => method === 'read'
+    ? [{ name: 'INV/1', partner_id: [13, 'Kaveri'], company_id: b.ids[0] === 2 ? TYRE : FUEL, amount_total: 9000, amount_residual: 2500 }]
+    : [{ id: 91, name: 'INV/1', partner_id: [13, 'Kaveri'], company_id: FUEL, invoice_date_due: '2026-11-01', amount_residual: 2500 },
+       { id: 2, name: 'INV/2', partner_id: [14, 'Selvam'], company_id: TYRE, invoice_date_due: '2026-11-05', amount_residual: 900 }],
 };
 globalThis.fetch = async (url, init) => {
   const m = String(url).match(/\/json\/2\/([^/]+)\/(.+)$/), body = JSON.parse(init.body);
   calls.push({ model: m[1], method: m[2], auth: init.headers.Authorization });
-  return new Response(JSON.stringify(ODOO[m[1]](body)), { status: 200, headers: { 'content-type': 'application/json' } });
+  return new Response(JSON.stringify(ODOO[m[1]](body, m[2])), { status: 200, headers: { 'content-type': 'application/json' } });
 };
 
 const { default: api } = await import('../netlify/functions/api.mjs');
@@ -71,9 +70,8 @@ test('users: admin manages users, others cannot, validation works', async () => 
 test('data: admin/manager see everything with correct maths', async () => {
   const d = (await call('data?date=2026-11-23', 'GET', null, karthik)).json;
   assert.equal(d.sales.length, 2); assert.equal(d.pre.length, 1); assert.equal(d.purch[0].amount, 300);
-  const f = d.profit.find((x) => x.company === 'Fuel Station');
-  assert.deepEqual([f.income, f.expense], [1000, 600]);
-  assert.equal(d.credit[0].amount, 2500); assert.equal(d.credit[0].due, '2026-11-01');
+  assert.equal(d.profit, undefined, 'profit was removed');
+  assert.equal(d.credit[0].amount, 2500); assert.equal(d.credit[0].id, 91); assert.equal(d.credit[0].due, '2026-11-01');
   assert.equal(calls[0].auth, 'bearer k');
 });
 
@@ -83,7 +81,7 @@ test('data: staff is limited by role and by company', async () => {
   assert.deepEqual(d.companies, ['Fuel Station']);
   assert.deepEqual(d.sales.map((x) => x.name), ['S1']);
   assert.deepEqual(d.credit.map((x) => x.name), ['INV/1']);
-  assert.deepEqual([d.profit, d.purch], [[], []]);
+  assert.deepEqual(d.purch, []);
   assert.ok(!calls.some((c) => ['purchase.order', 'account.move.line'].includes(c.model)), 'staff must not trigger profit/purchase queries');
 });
 
@@ -115,6 +113,14 @@ test('odoo: repeated refresh is served from cache', async () => {
   calls.length = 0;
   await call('data?date=2026-11-24', 'GET', null, karthik);
   assert.equal(calls.length, 0, 'second identical request must not hit Odoo');
+});
+
+test('invoice: printable data, role and company checks', async () => {
+  const r = await call('invoice/91', 'GET', null, karthik);
+  assert.equal(r.status, 200); assert.equal(r.json.lines.length, 1); assert.equal(r.json.move.company_id, 'Fuel Station');
+  assert.equal((await call('invoice/91', 'GET', null, priya)).status, 200);
+  assert.equal((await call('invoice/2', 'GET', null, priya)).status, 403, 'staff cannot open other companies');
+  assert.equal((await call('invoice/abc', 'GET', null, boss)).status, 400);
 });
 
 test('unknown route returns 404', async () => {

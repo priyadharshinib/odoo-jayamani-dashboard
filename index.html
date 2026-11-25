@@ -3,26 +3,33 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Jayamani Dashboard</title>
 <style>
-:root{--bg:#f5f6f8;--card:#fff;--tx:#1c2430;--mu:#6b7686;--bd:#e3e7ee;--ac:#2563eb;--gn:#15803d;--rd:#b91c1c;--am:#fef3c7}
-@media(prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mu:#93a0b2;--bd:#2c3644;--ac:#60a5fa;--gn:#4ade80;--rd:#f87171;--am:#3a3216}}
+:root{--bg:#f2f6f5;--card:#fff;--tx:#24343a;--mu:#6f8389;--bd:#e3ebe9;--ac:#3f8f87;--ac2:#e4f1ef;--bt:#fff;--gn:#3d8f6a;--rd:#c4564e;--am:#fbf1dc;--sh:0 2px 14px rgba(36,52,58,.07)}
+@media(prefers-color-scheme:dark){:root{--bg:#10181b;--card:#182226;--tx:#e6eeee;--mu:#8fa3a8;--bd:#263338;--ac:#6cc3b9;--ac2:#1f3a3a;--bt:#0f2a28;--gn:#6fd0a0;--rd:#f08a80;--am:#3a331d;--sh:0 2px 14px rgba(0,0,0,.35)}}
 *{box-sizing:border-box}[hidden]{display:none!important}
-body{margin:0 auto;font:15px system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:calc(14px + env(safe-area-inset-top,0px)) 14px calc(14px + env(safe-area-inset-bottom,0px));max-width:1100px}
-header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}
-h1{font-size:19px;margin:0}input,select,button,textarea{font:inherit;padding:7px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx)}
-button{cursor:pointer;background:var(--ac);color:#fff;border:0}button.g{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
-.k{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}.k small{color:var(--mu)}.k b{display:block;font-size:21px;margin-top:4px}
-.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}.tabs button{background:var(--card);color:var(--tx);border:1px solid var(--bd)}.tabs button.on{background:var(--ac);color:#fff}
-.box{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow-x:auto;margin-bottom:12px}
-table{width:100%;border-collapse:collapse}th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mu);font-weight:600;font-size:13px}td.n,th.n{text-align:right}
-tfoot td{font-weight:700}.pos{color:var(--gn)}.neg{color:var(--rd)}#msg,#lm{color:var(--rd);margin:8px 0}
-#rem{background:var(--am);border-radius:10px;padding:9px 12px;margin-bottom:12px;font-weight:600}
-.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;padding:12px}.f>*{width:100%}
-.done td{opacity:.5;text-decoration:line-through}
-.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:12px;align-items:start}@media(max-width:520px){.g2{grid-template-columns:1fr}}
-.sh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
-.bd{padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600}.cr{background:var(--rd);color:#fff}.hi{background:#f59e0b;color:#1c2430}.wa{background:var(--bd)}
-.bar{height:5px;border-radius:3px;background:var(--ac);margin-top:3px}.it{padding:9px 12px;border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx);width:100%;padding:calc(20px + env(safe-area-inset-top,0px)) clamp(14px,3vw,40px) calc(24px + env(safe-area-inset-bottom,0px))}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}h1{font-size:21px;margin:0;font-weight:650}h4{margin:0;padding:14px 16px 8px;color:var(--mu);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+input,select,button,textarea{font:inherit;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+button{cursor:pointer;background:var(--ac);color:var(--bt);border:0;transition:opacity .15s}button:hover{opacity:.88}button.g{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.k{background:var(--card);border-radius:16px;padding:16px 18px;box-shadow:var(--sh)}.k small,.mu{color:var(--mu)}.k b{display:block;font-size:24px;margin-top:4px;font-weight:650}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.tabs button{background:var(--card);color:var(--tx);box-shadow:var(--sh);border:0}.tabs button.on{background:var(--ac);color:var(--bt)}
+.box{background:var(--card);border-radius:16px;overflow-x:auto;margin-bottom:16px;box-shadow:var(--sh)}
+table{width:100%;border-collapse:collapse}th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mu);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}td.n,th.n{text-align:right}tbody tr:hover{background:var(--ac2)}
+tfoot td{font-weight:650}.pos{color:var(--gn)}.neg{color:var(--rd)}#msg,#lm{color:var(--rd);margin:8px 0}
+#rem{background:var(--am);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-weight:600}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;padding:14px}.f>*{width:100%}.done td{opacity:.5;text-decoration:line-through}
+.top{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,3fr);gap:18px;align-items:start}@media(max-width:1000px){.top{grid-template-columns:1fr}}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.scroll{max-height:62vh;overflow:auto}.scroll thead th{position:sticky;top:0;background:var(--card);z-index:1}
+.bd{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}.cr{background:#f8dedb;color:#a3392f}.hi{background:#fbe8c8;color:#8a5a10}.wa{background:var(--bd);color:var(--mu)}.ok{background:#d9efe4;color:#2b7a55}
+.bar{height:5px;border-radius:3px;background:var(--ac);margin-top:4px;opacity:.7}.it{padding:11px 16px;border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center}
+.lk{color:var(--ac);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.bk{position:fixed;inset:0;background:rgba(20,35,40,.38);z-index:20}
+.pn{position:fixed;left:0;top:0;bottom:0;width:min(580px,100%);background:var(--bg);z-index:21;overflow:auto;box-shadow:6px 0 30px rgba(0,0,0,.18)}.pn.sl{animation:sl .25s ease}@keyframes sl{from{transform:translateX(-100%)}}
+.ph{display:flex;justify-content:space-between;gap:10px;padding:18px 18px 8px}.tot{margin:6px 18px 10px;padding:16px;background:var(--card);border-radius:16px;box-shadow:var(--sh)}.tot b{display:block;font-size:28px}.pn .box{margin:0 18px 16px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ac);color:var(--bt);padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:40}#toast.on{opacity:1;transform:translate(-50%,0)}#toast.bad{background:var(--rd);color:#fff}
+#invp{position:fixed;inset:0;background:rgba(20,35,40,.45);z-index:30;overflow:auto;display:flex;justify-content:center;padding:20px}.ic{background:var(--card);border-radius:16px;padding:22px;width:min(760px,100%);height:fit-content;box-shadow:var(--sh)}.ic h2{margin:0 0 2px}
+@media print{body>*:not(#invp){display:none!important}#invp{position:static!important;background:#fff!important;padding:0}.ic{box-shadow:none!important;color:#000;background:#fff}.np{display:none}}
 </style></head><body>
 <div id="login" class="box" style="max-width:340px;margin:12vh auto;padding:20px">
  <h1>Jayamani Dashboard</h1><p style="color:var(--mu)">Sign in to continue</p>
@@ -36,10 +43,11 @@ tfoot td{font-weight:700}.pos{color:var(--gn)}.neg{color:var(--rd)}#msg,#lm{colo
 <div id="rem" hidden></div><div id="msg"></div>
 <div class="kpis" id="kpis"></div><div class="tabs" id="tabs"></div><div id="main"></div>
 </div>
+<div id=pnl></div><div id=invp hidden></div><div id=toast></div>
 <script>
 const $=id=>document.getElementById(id),fmt=n=>'₹'+(n||0).toLocaleString('en-IN',{maximumFractionDigits:0}),sum=(a,k='amount')=>a.reduce((s,x)=>s+x[k],0);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const TABS={today:'Today',sales:'Sales',pre:'Prebookings',purch:'Purchases',profit:'Profit',credit:'Credit dues',tasks:'Tasks',users:'Users'};
+const TABS={today:'Today',sales:'Sales',pre:'Prebookings',purch:'Purchases',credit:'Credit dues',tasks:'Tasks',users:'Users'};
 let ME,D,TK=[],US=[],tab,pre={},CR=[];const seen=new Set();
 $('d').value=new Date(Date.now()+19800000).toISOString().slice(0,10);
 /*API*/async function api(p,m='GET',b){const r=await fetch('/api/'+p,{method:m,headers:{'content-type':'application/json',authorization:'Bearer '+(sessionStorage.t||'')},body:b&&JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(r.status===401&&p!=='login')out();if(!r.ok)throw Error(j.error||r.status);return j}/*END*/
@@ -56,43 +64,61 @@ async function load(){
 const has=k=>ME.perms.includes(k),dd=x=>Math.round((new Date().setHours(0,0,0,0)-new Date(x.due+'T00:00:00'))/864e5);
 function tbl(h,r,f,raw){const w=raw?'':'<div class=box>',z=raw?'':'</div>';return`${w}<table><thead><tr>${h.map((x,i)=>`<th class="${x[0]=='#'?'n':''}">${x.replace('#','')}`).join('')}</thead><tbody>${r.join('')||'<tr><td>Nothing here'}</tbody>${f?'<tfoot><tr>'+f+'</tfoot>':''}</table>${z}`}
 function render(){
-  const c=$('c').value,f=a=>c?a.filter(x=>x.company===c):a,S=f(D.sales),P=f(D.pre),U=f(D.purch),L=f(D.profit);CR=f(D.credit);
-  const pr=sum(L,'income')-sum(L,'expense');
-  $('kpis').innerHTML=[['sales','Sales ('+S.length+')',fmt(sum(S))],['pre','Prebookings ('+P.length+')',fmt(sum(P))],['purch','Purchases ('+U.length+')',fmt(sum(U))],['profit','Profit today',`<span class="${pr<0?'neg':'pos'}">${fmt(pr)}</span>`],['credit','Credit due ('+CR.length+')',fmt(sum(CR))]].filter(k=>has(k[0])).map(([,a,b])=>`<div class=k><small>${a}</small><b>${b}</b></div>`).join('');
+  const c=$('c').value,f=a=>c?a.filter(x=>x.company===c):a,S=f(D.sales),P=f(D.pre),U=f(D.purch);CR=f(D.credit);
+  $('kpis').innerHTML=[['sales','Sales ('+S.length+')',fmt(sum(S))],['pre','Prebookings ('+P.length+')',fmt(sum(P))],['purch','Purchases ('+U.length+')',fmt(sum(U))],['credit','Credit due ('+CR.length+')',fmt(sum(CR))]].filter(k=>has(k[0])).map(([,a,b])=>`<div class=k><small>${a}</small><b>${b}</b></div>`).join('');
   $('tabs').innerHTML=['today',...ME.perms].map(k=>`<button class="${k==tab?'on':''}" onclick="tab='${k}';render()">${TABS[k]}</button>`).join('');
   const row=x=>`<tr><td>${esc(x.name)}<td>${esc(x.partner)}<td>${esc(x.company)}<td class=n>${fmt(x.amount)}`,H=['Ref','Party','Company','#Amount'];
   let h='';
-  if(tab==='today')h=todayView(S,P,U,L);
+  if(tab==='today')h=todayView(S,P,U);
   if(tab==='sales')h=tbl(H,S.map(row),`<td colspan=3>Total<td class=n>${fmt(sum(S))}`);
   if(tab==='pre')h=tbl(H,P.map(row),`<td colspan=3>Total<td class=n>${fmt(sum(P))}`);
   if(tab==='purch')h=tbl(H,U.map(row),`<td colspan=3>Total<td class=n>${fmt(sum(U))}`);
-  if(tab==='profit')h=tbl(['Company','#Income','#Expenses & COGS','#Profit'],L.map(x=>`<tr><td>${esc(x.company)}<td class=n>${fmt(x.income)}<td class=n>${fmt(x.expense)}<td class="n ${x.income<x.expense?'neg':'pos'}">${fmt(x.income-x.expense)}`),`<td>Total<td class=n>${fmt(sum(L,'income'))}<td class=n>${fmt(sum(L,'expense'))}<td class=n>${fmt(pr)}`);
-  if(tab==='credit')h=tbl(['Invoice','Customer','Company','Due','#Days late','#Balance',''],CR.map((x,i)=>`<tr><td>${esc(x.name)}<td>${esc(x.partner)}<td>${esc(x.company)}<td>${x.due||''}<td class="n ${dd(x)>0?'neg':''}">${x.due?Math.max(dd(x),0):''}<td class=n>${fmt(x.amount)}<td><button onclick="mk(${i})">+ Reminder</button>`),`<td colspan=5>Total<td class=n>${fmt(sum(CR))}<td>`);
+  if(tab==='credit')h=tbl(['Invoice','Customer','Company','Due','#Days late','#Balance',''],CR.map((x,i)=>`<tr><td><a class=lk onclick="inv(${x.id})">${esc(x.name)}</a><td>${esc(x.partner)}<td>${esc(x.company)}<td>${x.due||''}<td class="n ${dd(x)>0?'neg':''}">${x.due?Math.max(dd(x),0):''}<td class=n>${fmt(x.amount)}<td><button onclick="mk(${i})">+ Reminder</button>`),`<td colspan=5>Total<td class=n>${fmt(sum(CR))}<td>`);
   if(tab==='tasks')h=taskView();
   if(tab==='users')h=userView();
-  $('main').innerHTML=h;banner()
+  $('main').innerHTML=h;banner();if(OP)showPanel()
 }
 const sec=(t,b,r='')=>`<div class=box><div class=sh><b>${t}</b><span>${r}</span></div>${b}</div>`,tier=l=>l>30?['Critical','cr']:l>7?['High','hi']:l>0?['Watch','wa']:['Not due','wa'];
-let PT=[];
-function parties(){const m={};CR.forEach(x=>{const p=m[x.partner]||(m[x.partner]={name:x.partner,total:0,over:0,n:0,late:0,cos:new Set()}),d=x.due?dd(x):0;p.total+=x.amount;p.n++;if(d>0){p.over+=x.amount;p.late=Math.max(p.late,d)}p.cos.add(x.company)});return Object.values(m).sort((a,b)=>b.over-a.over||b.total-a.total)}
-const tom=()=>{const d=new Date(Date.now()+864e5);d.setHours(10,0,0,0);return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,16)};
-async function plan(names){let n=0;try{for(const nm of names){const p=PT.find(x=>x.name===nm);if(!p||TK.some(t=>t.status==='open'&&t.type==='Collection'&&t.ref===nm))continue;
- await api('tasks','POST',{title:'Collect '+fmt(p.over||p.total)+' from '+nm,type:'Collection',ref:nm,company:[...p.cos][0]||'',note:p.n+' invoice(s), '+fmt(p.total)+' outstanding, oldest '+p.late+' days late',due:tom(),assignee:($('pa')||{}).value||ME.username});n++}
- TK=await api('tasks');render();$('msg').style.color='var(--gn)';$('msg').textContent=n?'Planned '+n+' collection task(s) for tomorrow 10:00':'Already planned for tomorrow'}catch(e){$('msg').textContent=e.message}}
-function todayView(S,P,U,L){
+let PT=[],OP=null;
+function parties(){const m={};CR.forEach(x=>{const p=m[x.partner]||(m[x.partner]={name:x.partner,total:0,over:0,n:0,late:0,cos:new Set(),inv:[],byco:{}}),d=x.due?dd(x):0,c=p.byco[x.company]||(p.byco[x.company]={total:0,over:0});p.total+=x.amount;c.total+=x.amount;p.n++;p.inv.push(x);if(d>0){p.over+=x.amount;c.over+=x.amount;p.late=Math.max(p.late,d)}p.cos.add(x.company)});return Object.values(m).sort((a,b)=>b.over-a.over||b.total-a.total)}
+const tom=()=>{const d=new Date(Date.now()+864e5);d.setHours(10,0,0,0);return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,16)},planned=n=>TK.some(t=>t.status==='open'&&t.type==='Collection'&&t.ref===n);
+function toast(t,bad){const e=$('toast');e.textContent=t;e.className='on'+(bad?' bad':'');clearTimeout(toast.h);toast.h=setTimeout(()=>e.className='',3000)}
+async function plan(names){
+  const todo=names.map(nm=>PT.find(x=>x.name===nm)).filter(p=>p&&!planned(p.name)).map(p=>({title:'Collect '+fmt(p.over||p.total)+' from '+p.name,type:'Collection',ref:p.name,company:[...p.cos][0]||'',note:p.n+' invoice(s), '+fmt(p.total)+' outstanding, oldest '+p.late+' days late',due:tom(),assignee:($('pa')||{}).value||ME.username}));
+  if(!todo.length)return toast('Already planned for tomorrow');
+  TK=[...TK,...todo.map((t,i)=>({...t,id:'tmp'+i,by:ME.username,status:'open'}))];render();toast('Planned '+todo.length+' task(s) for tomorrow 10:00');
+  try{for(const t of todo)await api('tasks','POST',t);TK=await api('tasks');render()}catch(e){TK=TK.filter(t=>!String(t.id).startsWith('tmp'));render();toast(e.message,1)}
+}
+function openParty(i){OP=PT[i].name;showPanel(1)}
+function closePanel(){OP=null;$('pnl').innerHTML=''}
+function showPanel(fresh){
+  const p=PT.find(x=>x.name===OP);if(!p)return closePanel();
+  $('pnl').innerHTML=`<div class=bk onclick="closePanel()"></div><aside class="pn${fresh?' sl':''}"><div class=ph><div><b style="font-size:19px">${esc(p.name)}</b><div class=mu>${p.n} invoice(s) · ${Object.keys(p.byco).length} company(ies)</div></div><button class=g onclick="closePanel()">✕</button></div>
+  <div class=tot><small class=mu>Total to collect</small><b>${fmt(p.total)}</b>${p.over?`<span class=neg>${fmt(p.over)} overdue</span>`:'<span class=pos>Nothing overdue</span>'}<div style="margin-top:10px">${planned(p.name)?'<span class="bd ok">✓ Planned for tomorrow</span>':'<button onclick="plan([OP])">Plan for tomorrow</button>'}</div></div>
+  <div class=box><h4>Company-wise</h4>${tbl(['Company','#Overdue','#To collect'],Object.entries(p.byco).sort((a,b)=>b[1].total-a[1].total).map(([n,v])=>`<tr><td>${esc(n)}<td class="n ${v.over?'neg':''}">${fmt(v.over)}<td class=n>${fmt(v.total)}`),`<td>Total<td class=n>${fmt(p.over)}<td class=n>${fmt(p.total)}`,true)}</div>
+  <div class=box><h4>Invoices (tap a number to view and print)</h4>${tbl(['Invoice','Company','Due','#Late','#Balance'],p.inv.map(x=>`<tr><td><a class=lk onclick="inv(${x.id})">${esc(x.name)}</a><td>${esc(x.company)}<td>${x.due||''}<td class="n ${dd(x)>0?'neg':''}">${x.due&&dd(x)>0?dd(x):''}<td class=n>${fmt(x.amount)}`),null,true)}</div></aside>`
+}
+async function inv(id){
+  const el=$('invp');el.hidden=false;el.innerHTML='<div class=ic>Loading invoice…</div>';
+  try{const{move:m,lines:ls}=await api('invoice/'+id),nm=v=>Array.isArray(v)?v[1]:v;
+  el.innerHTML=`<div class=ic><div class=np style="text-align:right"><button onclick="print()">🖨 Print</button> <button class=g onclick="$('invp').hidden=true">Close</button></div>
+  <h2>Invoice ${esc(m.name)}</h2><div class=mu>${esc(nm(m.company_id))}</div><p><b>Customer:</b> ${esc(nm(m.partner_id))}<br><b>Date:</b> ${m.invoice_date||'-'} &nbsp; <b>Due:</b> ${m.invoice_date_due||'-'}</p>
+  ${tbl(['Description','#Qty','#Price','#Amount'],ls.map(l=>`<tr><td>${esc(l.name)}<td class=n>${l.quantity}<td class=n>${fmt(l.price_unit)}<td class=n>${fmt(l.price_subtotal)}`),`<td colspan=3>Untaxed<td class=n>${fmt(m.amount_untaxed)}`,true)}
+  <p style="text-align:right">Tax ${fmt(m.amount_tax)} · <b>Total ${fmt(m.amount_total)}</b><br>Balance due: <b>${fmt(m.amount_residual)}</b></p></div>`}
+  catch(e){el.innerHTML=`<div class=ic>${esc(e.message)}<p><button onclick="$('invp').hidden=true">Close</button></p></div>`}
+}
+function todayView(S,P,U){
   const c=$('c').value,e=new Date().setHours(23,59,59,999),mine=TK.filter(t=>t.status==='open'&&t.assignee===ME.username),T=t=>+new Date(t.due),
-   td=mine.filter(t=>T(t)<=e).sort((a,b)=>T(a)-T(b)),tm=mine.filter(t=>T(t)>e&&T(t)<=e+864e5),
-   ft=t=>t.due.slice(8,10)+'/'+t.due.slice(5,7)+' '+t.due.slice(11);
+   td=mine.filter(t=>T(t)<=e).sort((a,b)=>T(a)-T(b)),tm=mine.filter(t=>T(t)>e&&T(t)<=e+864e5),ft=t=>t.due.slice(8,10)+'/'+t.due.slice(5,7)+' '+t.due.slice(11);
   const pn=sec("Today's plan ("+td.length+')',(td.map(t=>`<div class=it><input type=checkbox onchange="tg('${t.id}',this.checked)"><span style="flex:1">${esc(t.title)}</span><small class="${T(t)<Date.now()?'neg':''}">${ft(t)}</small></div>`).join('')||'<div class=it>Nothing due today 🎉</div>')+
-   (tm.length?`<div class=it><b>Planned for tomorrow (${tm.length})</b></div>`+tm.map(t=>`<div class=it><span style="flex:1">${esc(t.title)}</span><small>${t.due.slice(11)}</small></div>`).join(''):''));
+   `<div class=it><b>Tomorrow (${tm.length})</b></div>`+(tm.map(t=>`<div class=it><span style="flex:1">${esc(t.title)}</span><small>${t.due.slice(11)}</small></div>`).join('')||'<div class=it><span class=mu>Nothing planned yet</span></div>'));
   const pb=has('pre')?sec('Prebookings today ('+P.length+' · '+fmt(sum(P))+')',[...P].sort((a,b)=>b.amount-a.amount).slice(0,6).map(x=>`<div class=it><span style="flex:1">${esc(x.partner)} <small>${esc(x.name)}</small></span><b>${fmt(x.amount)}</b></div>`).join('')||'<div class=it>None today</div>'):'';
   PT=parties();const ov=PT.filter(p=>p.over>0);
-  const co=has('credit')?sec('Collect first · '+ov.length+' overdue · '+fmt(sum(ov,'over')),tbl(['Priority','Customer','#Inv','#Days late','#Overdue','#Total',''],PT.slice(0,10).map((p,i)=>{const t=tier(p.late);return`<tr><td><span class="bd ${t[1]}">${t[0]}</span><td>${esc(p.name)}<td class=n>${p.n}<td class=n>${p.late||''}<td class="n ${p.over?'neg':''}">${fmt(p.over)}<td class=n>${fmt(p.total)}<td><button onclick="plan([PT[${i}].name])">Plan</button>`}),null,true),
+  const co=has('credit')?sec('Collect first · '+ov.length+' overdue · '+fmt(sum(ov,'over')),'<div class=scroll>'+tbl(['Priority','Customer','Invoices','#Days late','#Overdue','#Total',''],PT.map((p,i)=>{const t=tier(p.late);return`<tr><td><span class="bd ${t[1]}">${t[0]}</span><td>${esc(p.name)}<td><a class=lk onclick="openParty(${i})">${p.n} invoice${p.n>1?'s':''}</a><td class=n>${p.late||''}<td class="n ${p.over?'neg':''}">${fmt(p.over)}<td class=n>${fmt(p.total)}<td>${planned(p.name)?'<span class="bd ok">✓ Planned</span>':`<button onclick="plan([PT[${i}].name])">Plan</button>`}`}),null,true)+'</div>',
    `<select id=pa ${ME.role==='staff'?'disabled':''}>${US.map(u=>`<option value="${esc(u.username)}" ${u.username===ME.username?'selected':''}>${esc(u.name)}</option>`).join('')}</select> <button onclick="plan(PT.slice(0,5).map(p=>p.name))">Plan top 5 for tomorrow</button>`):'';
   const cols=[['sales','Sales',S],['pre','Prebookings',P],['purch','Purchases',U]].filter(k=>has(k[0])),cs=c?[c]:D.companies,by=(a,n)=>sum(a.filter(x=>x.company===n)),mx=Math.max(1,...cs.map(n=>by(S,n)));
-  const st=tbl(['Company',...cols.map(k=>'#'+k[1]),...(has('profit')?['#Profit']:[])],cs.map(n=>{const l=L.find(x=>x.company===n),pf=l?l.income-l.expense:0;return`<tr><td>${esc(n)}${has('sales')?`<div class=bar style="width:${Math.round(by(S,n)/mx*100)}%"></div>`:''}${cols.map(k=>`<td class=n>${fmt(by(k[2],n))}`).join('')}${has('profit')?`<td class="n ${pf<0?'neg':'pos'}">${fmt(pf)}`:''}`}),
-   `<td>Total${cols.map(k=>`<td class=n>${fmt(sum(k[2]))}`).join('')}${has('profit')?`<td class=n>${fmt(sum(L,'income')-sum(L,'expense'))}`:''}`,true);
-  return`<div class=g2><div>${pn}${pb}</div><div>${co}</div><div style="grid-column:1/-1">${sec('Daily statement by company',st)}</div></div>`
+  const st=tbl(['Company',...cols.map(k=>'#'+k[1])],cs.map(n=>`<tr><td>${esc(n)}${has('sales')?`<div class=bar style="width:${Math.round(by(S,n)/mx*100)}%"></div>`:''}${cols.map(k=>`<td class=n>${fmt(by(k[2],n))}`).join('')}`),`<td>Total${cols.map(k=>`<td class=n>${fmt(sum(k[2]))}`).join('')}`,true);
+  return`<div class=top><div>${co}</div><div>${pn}${pb}</div></div>${sec('Daily statement by company',st)}`
 }
 function mk(i){const x=CR[i];pre={title:'Collect '+fmt(x.amount)+' from '+x.partner,type:'Collection',ref:x.name,company:x.company,note:'Invoice '+x.name+', due '+(x.due||'-')};tab='tasks';render()}
 function taskView(){

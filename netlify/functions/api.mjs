@@ -4,8 +4,8 @@ import crypto from 'node:crypto';
 const E = process.env, S = () => globalThis.__STORE__ || getStore('dash'); // __STORE__ lets tests swap in memory
 // Role -> which tabs/data it may use. Edit here to change roles.
 const PERM = {
-  admin:   ['sales', 'pre', 'purch', 'profit', 'credit', 'tasks', 'users'],
-  manager: ['sales', 'pre', 'purch', 'profit', 'credit', 'tasks'],
+  admin:   ['sales', 'pre', 'purch', 'credit', 'tasks', 'users'],
+  manager: ['sales', 'pre', 'purch', 'credit', 'tasks'],
   staff:   ['sales', 'pre', 'credit', 'tasks'],
 };
 const J = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json' } });
@@ -50,26 +50,19 @@ async function dashData(me, date) {
   const co = (v) => cname[Array.isArray(v) ? v[0] : v] || '', nm = (v) => (Array.isArray(v) ? v[1] : v) || '';
   const q = (m, domain, fields, order = 'id desc') => odoo(m, 'search_read', { domain, fields, context, limit: 2000, order });
   const F = ['name', 'partner_id', 'company_id', 'amount_total'];
-  const [sales, pre, purch, lines, credit] = await seq([
+  const [sales, pre, purch, credit] = await seq([
     () => can('sales') ? q('sale.order', [['state', '=', 'sale'], ...range('date_order')], F) : [],
     () => can('pre') ? q('sale.order', [['state', 'in', ['draft', 'sent', 'sale']], ...range('commitment_date')], F) : [],
     () => can('purch') ? q('purchase.order', [['state', 'in', ['purchase', 'done']], ...range('date_order')], F) : [],
-    () => can('profit') ? q('account.move.line', [['parent_state', '=', 'posted'], ['date', '=', date],
-      ['account_type', 'in', ['income', 'income_other', 'expense', 'expense_direct_cost', 'expense_depreciation']]], ['company_id', 'balance', 'account_type']) : [],
     () => can('credit') ? q('account.move', [['move_type', '=', 'out_invoice'], ['state', '=', 'posted'], ['payment_state', 'in', ['not_paid', 'partial']]],
       ['name', 'partner_id', 'company_id', 'invoice_date_due', 'amount_residual'], 'invoice_date_due asc') : [],
   ]);
-  const pl = {};
-  for (const l of lines) {
-    const c = co(l.company_id); pl[c] ||= { company: c, income: 0, expense: 0 };
-    if (l.account_type.startsWith('income')) pl[c].income -= l.balance; else pl[c].expense += l.balance;
-  }
   const rows = (a) => a.map((o) => ({ name: o.name, partner: nm(o.partner_id), company: co(o.company_id), amount: o.amount_total }));
   const ok = (r) => !me.companies?.length || me.companies.includes(r.company);
   const v = {
     date, companies: cos.map((c) => c.name).filter((n) => ok({ company: n })),
-    sales: rows(sales).filter(ok), pre: rows(pre).filter(ok), purch: rows(purch).filter(ok), profit: Object.values(pl).filter(ok),
-    credit: credit.map((o) => ({ name: o.name, partner: nm(o.partner_id), company: co(o.company_id), amount: o.amount_residual, due: o.invoice_date_due })).filter(ok),
+    sales: rows(sales).filter(ok), pre: rows(pre).filter(ok), purch: rows(purch).filter(ok), 
+    credit: credit.map((o) => ({ id: o.id, name: o.name, partner: nm(o.partner_id), company: co(o.company_id), amount: o.amount_residual, due: o.invoice_date_due })).filter(ok),
   };
   CACHE.set(key, { t: Date.now(), v });
   return v;
@@ -96,6 +89,18 @@ export default async (req) => {
     const me = { ...users[uname], username: uname }, boss = me.role !== 'staff';
 
     if (path[0] === 'data') return J(await dashData(me, url.searchParams.get('date') || new Date(Date.now() + 19800000).toISOString().slice(0, 10)));
+
+    if (path[0] === 'invoice') {
+      if (!PERM[me.role].includes('credit')) return J({ error: 'Not allowed' }, 403);
+      const id = Number(path[1]); if (!id) return J({ error: 'Bad invoice id' }, 400);
+      const [move] = await odoo('account.move', 'read', { ids: [id], fields: ['name', 'partner_id', 'company_id', 'invoice_date', 'invoice_date_due', 'amount_untaxed', 'amount_tax', 'amount_total', 'amount_residual'] });
+      if (!move) return J({ error: 'Invoice not found' }, 404);
+      const cn = Array.isArray(move.company_id) ? move.company_id[1] : (await companies()).find((c) => c.id === move.company_id)?.name;
+      if (me.companies?.length && !me.companies.includes(cn)) return J({ error: 'Not allowed' }, 403);
+      await sleep(250);
+      const lines = await odoo('account.move.line', 'search_read', { domain: [['move_id', '=', id], ['display_type', '=', 'product']], fields: ['name', 'quantity', 'price_unit', 'price_subtotal'], order: 'sequence, id' });
+      return J({ move: { ...move, company_id: cn }, lines });
+    }
 
     if (path[0] === 'tasks') {
       let t = await getTasks();
